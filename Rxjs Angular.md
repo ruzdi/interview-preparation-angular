@@ -326,5 +326,44 @@ export class ConcatMapExampleComponent implements OnInit {
 }
 ```
 
+
+### 11. What is the difference between Subject and BehavioralSubject?
+
+Subject and BehaviorSubject are both part of RxJS, and they are used to handle asynchronous data streams. Here's a detailed comparison:
+
+1. **Initial Value:**
+Subject: Does not have an initial value. It starts emitting values only after it has subscribers.
+BehaviorSubject: Requires an initial value. Subscribers will immediately receive the last emitted value, or the initial value if no other values have been emitted.
+
+2. **Subscription Behavior:**
+Subject: Subscribers only receive values emitted after they subscribe.
+BehaviorSubject: Subscribers receive the most recent value immediately upon subscription, in addition to any future values.
+
+3. **Use Cases:**
+Subject: Suitable for scenarios where you want to broadcast messages to multiple subscribers without the need to store the last value (e.g., event emitters).
+BehaviorSubject: Ideal when you need to provide the current state to new subscribers (e.g., maintaining the state of a variable over time, like the current user).
+
+```typescript
+import { Subject, BehaviorSubject } from 'rxjs';
+
+// Subject Example
+const subject = new Subject<number>();
+subject.subscribe(value => console.log('Subscriber 1:', value));
+subject.next(1); // Logs: Subscriber 1: 1
+
+// New subscriber won't receive previously emitted value
+subject.subscribe(value => console.log('Subscriber 2:', value));
+subject.next(2); // Logs: Subscriber 1: 2, Subscriber 2: 2
+
+// BehaviorSubject Example
+const behaviorSubject = new BehaviorSubject<number>(0); // Initial value is 0
+behaviorSubject.subscribe(value => console.log('Subscriber 1:', value)); // Logs: Subscriber 1: 0
+behaviorSubject.next(1); // Logs: Subscriber 1: 1
+
+// New subscriber receives the last emitted value (1)
+behaviorSubject.subscribe(value => console.log('Subscriber 2:', value)); // Logs: Subscriber 2: 1
+behaviorSubject.next(2); // Logs: Subscriber 1: 2, Subscriber 2: 2
+```
+
 ## Conclusion
 RxJS is an incredibly powerful tool in Angular for handling asynchronous tasks in a declarative and maintainable way. By leveraging operators and observables, developers can create clean, responsive, and efficient applications that respond to various events and data streams seamlessly.
